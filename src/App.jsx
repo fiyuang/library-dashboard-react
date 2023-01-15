@@ -4,6 +4,14 @@ import './App.css';
 import { createClient } from '@supabase/supabase-js';
 import { CountriesTable } from './components/CountriesTable';
 import { TestChakraUI } from './components/TestChakraUI';
+import { LoginArea } from './components/login/LoginArea';
+
+import {
+  ThemeProvider,
+  theme,
+  ColorModeProvider,
+  CSSReset,
+} from '@chakra-ui/react';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -24,8 +32,14 @@ function App() {
 
   return (
     <div className="App">
-      <TestChakraUI />
-      <CountriesTable countries={countries} />
+      <ThemeProvider theme={theme}>
+        <ColorModeProvider>
+          <CSSReset />
+          <LoginArea />
+        </ColorModeProvider>
+      </ThemeProvider>
+      {/* <TestChakraUI />
+      <CountriesTable countries={countries} /> */}
     </div>
   );
 }
