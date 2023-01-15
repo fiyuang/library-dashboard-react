@@ -1,40 +1,60 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
 import { createClient } from '@supabase/supabase-js';
+import { Box, Text, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_API_KEY
 );
 
-async function getCountries() {
-  const countries = await supabase.from('countries').select();
-  console.log(countries);
+function CountriesTable({ countries }) {
+  return (
+    <Table>
+      <Thead>
+        <Tr>
+          <Th>No</Th>
+          <Th>Name</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {countries.map((item, index) => (
+          <Tr key={index}>
+            <Td>{item.id}</Td>
+            <Td>{item.name}</Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  );
 }
-getCountries();
 
 function App() {
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0)
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    const fetchCountriesData = async () => {
+      const result = await supabase.from('countries').select();
+      setCountries(result.data);
+    };
+
+    fetchCountriesData();
+  }, []);
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+      <Box w="100%" h="200px" bgGradient="linear(to-t, green.200, pink.500)" />
+      <Box w="100%" h="200px" bgGradient="radial(gray.300, yellow.400, pink.200)" />
+      <Text
+        bgGradient="linear(to-l, #7928CA, #FF0080)"
+        bgClip="text"
+        fontSize="6xl"
+        fontWeight="extrabold"
+      >
+        Welcome to Chakra UI
+      </Text>
+      <CountriesTable countries={countries} />
     </div>
   );
 }
