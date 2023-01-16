@@ -1,45 +1,28 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/Auth';
+
 import './App.css';
 
-import { createClient } from '@supabase/supabase-js';
-import { CountriesTable } from './components/CountriesTable';
-import { TestChakraUI } from './components/TestChakraUI';
 import { LoginArea } from './components/login/LoginArea';
+import { Login } from './components/Login';
+import { Dashboard } from './components/Dashboard';
+import { PrivateRoute } from './components/PrivateRoute';
 
-import {
-  ThemeProvider,
-  theme,
-  ColorModeProvider,
-  CSSReset,
-} from '@chakra-ui/react';
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_API_KEY
-);
 
 function App() {
-  const [countries, setCountries] = useState([]);
-
-  useEffect(() => {
-    const fetchCountriesData = async () => {
-      const result = await supabase.from('countries').select();
-      setCountries(result.data);
-    };
-
-    fetchCountriesData();
-  }, []);
-
   return (
     <div className="App">
-      <ThemeProvider theme={theme}>
-        <ColorModeProvider>
-          <CSSReset />
-          <LoginArea />
-        </ColorModeProvider>
-      </ThemeProvider>
       {/* <TestChakraUI />
       <CountriesTable countries={countries} /> */}
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <PrivateRoute exact path="/" component={Dashboard} />
+            <Route path="/login" component={Login} />
+          </Routes>
+        </AuthProvider>
+      </Router>
     </div>
   );
 }
