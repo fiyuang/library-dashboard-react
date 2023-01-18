@@ -5,13 +5,10 @@ import { createClient } from '@supabase/supabase-js';
 import { CountriesTable } from './components/CountriesTable';
 import { TestChakraUI } from './components/TestChakraUI';
 import { LoginArea } from './components/login/LoginArea';
+import { Navbar } from './components/Navbar';
+import { Home } from './pages/Home';
 
-import {
-  ThemeProvider,
-  theme,
-  ColorModeProvider,
-  CSSReset,
-} from '@chakra-ui/react';
+import { ThemeProvider, theme, ColorModeProvider, CSSReset } from '@chakra-ui/react';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -32,6 +29,8 @@ function App() {
 
   return (
     <div className="App">
+      {/* <Navbar />
+      <Home /> */}
       <ThemeProvider theme={theme}>
         <ColorModeProvider>
           <CSSReset />
