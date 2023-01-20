@@ -4,7 +4,7 @@ import { Button, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Stack } from '
 import { supabase } from '../../utils/supabase';
 
 const TableDashboard = () => {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState();
 
   useEffect(() => {
     const fetchBooksData = async () => {
@@ -26,7 +26,7 @@ const TableDashboard = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {books.map((item, index) => (
+          {books?.map((item, index) => (
             <Tr key={index}>
               <Td>{item.title}</Td>
               <Td>{item.author}</Td>

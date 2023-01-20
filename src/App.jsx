@@ -1,13 +1,16 @@
 import './App.css';
-
-import { Dashboard } from './pages/Dashboard';
-import { Login } from './pages/Login';
+import { Router } from './app/Router';
+import { ThemeProvider, theme, ColorModeProvider, CSSReset } from '@chakra-ui/react';
 
 function App() {
   return (
     <div className="App">
-      {/* <Dashboard /> */}
-      <Login />
+      <ThemeProvider theme={theme}>
+        <ColorModeProvider>
+          <CSSReset />
+          <Router />
+        </ColorModeProvider>
+      </ThemeProvider>
     </div>
   );
 }
