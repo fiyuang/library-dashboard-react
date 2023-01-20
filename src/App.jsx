@@ -1,44 +1,13 @@
-import { useState, useEffect } from 'react';
 import './App.css';
 
-import { createClient } from '@supabase/supabase-js';
-import { CountriesTable } from './components/CountriesTable';
-import { TestChakraUI } from './components/TestChakraUI';
-import { LoginArea } from './components/login/LoginArea';
-import { Navbar } from './components/Navbar';
-import { Home } from './pages/Home';
-
-import { ThemeProvider, theme, ColorModeProvider, CSSReset } from '@chakra-ui/react';
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_API_KEY
-);
+import { Dashboard } from './pages/Dashboard';
+import { Login } from './pages/Login';
 
 function App() {
-  const [countries, setCountries] = useState([]);
-
-  useEffect(() => {
-    const fetchCountriesData = async () => {
-      const result = await supabase.from('countries').select();
-      setCountries(result.data);
-    };
-
-    fetchCountriesData();
-  }, []);
-
   return (
     <div className="App">
-      {/* <Navbar />
-      <Home /> */}
-      <ThemeProvider theme={theme}>
-        <ColorModeProvider>
-          <CSSReset />
-          <LoginArea />
-        </ColorModeProvider>
-      </ThemeProvider>
-      {/* <TestChakraUI />
-      <CountriesTable countries={countries} /> */}
+      {/* <Dashboard /> */}
+      <Login />
     </div>
   );
 }
