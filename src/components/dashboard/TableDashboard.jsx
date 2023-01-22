@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Button, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Stack } from '@chakra-ui/react';
 import { supabase } from '../../utils/supabase';
@@ -35,9 +36,11 @@ const TableDashboard = () => {
                   <Button colorScheme="blue" size="sm">
                     Detail
                   </Button>
-                  <Button colorScheme="orange" size="sm">
-                    Edit
-                  </Button>
+                  <Link to={`/edit/${item.id}`}>
+                    <Button colorScheme="orange" size="sm">
+                      Edit
+                    </Button>
+                  </Link>
                   <Button colorScheme="red" size="sm">
                     Delete
                   </Button>
