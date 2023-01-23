@@ -1,6 +1,8 @@
 import './App.css';
 import { Router } from './app/Router';
 import { ThemeProvider, theme, ColorModeProvider, CSSReset } from '@chakra-ui/react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -9,6 +11,7 @@ function App() {
         <ColorModeProvider>
           <CSSReset />
           <Router />
+          <ToastContainer />
         </ColorModeProvider>
       </ThemeProvider>
     </div>
