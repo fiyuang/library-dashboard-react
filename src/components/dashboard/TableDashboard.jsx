@@ -1,15 +1,16 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Button, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Stack } from '@chakra-ui/react';
 import { supabase } from '../../utils/supabase';
 import { DeleteModal } from './DeleteModal';
-import { toast } from 'react-toastify';
 
 const TableDashboard = () => {
   const [books, setBooks] = useState([]);
   const [selectedDataId, setSelectedDataId] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  // const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchBooksData = async () => {
@@ -17,8 +18,11 @@ const TableDashboard = () => {
         const result = await supabase.from('books').select();
         setBooks(result.data);
       } catch (error) {
-        toast.error((error.message), {
-          position: toast.POSITION.TOP_RIGHT
+        Swal.fire({
+          title: 'Error!',
+          text: error.message,
+          icon: 'error',
+          confirmButtonText: 'OK'
         });
       }
     };
@@ -26,17 +30,29 @@ const TableDashboard = () => {
     fetchBooksData();
   }, []);
 
+  function closeModal() {
+    setIsModalOpen(false);
+  }
+
   async function handleDelete(dataId) {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       const { deleteData } = await supabase.from('books').delete().eq('id', dataId);
-      window.location.reload();
-      toast.success("Success deleted data !", {
-        position: toast.POSITION.TOP_RIGHT
+      closeModal();
+      Swal.fire({
+        title: 'Success!',
+        text: 'Data deleted successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.reload();
       });
     } catch (error) {
-      toast.error((error.message), {
-        position: toast.POSITION.TOP_RIGHT
+      Swal.fire({
+        title: 'Error!',
+        text: error.message,
+        icon: 'error',
+        confirmButtonText: 'OK'
       });
       // setError(err);
     }
@@ -77,10 +93,10 @@ const TableDashboard = () => {
             ))}
           </Tbody>
         </Table>
-        {selectedDataId && (
+        {isModalOpen && (
           <DeleteModal
             onConfirm={handleDelete}
-            onCancel={() => setSelectedDataId(null)}
+            onCancel={() => setIsModalOpen(false)}
             dataId={selectedDataId}
           />
         )}
