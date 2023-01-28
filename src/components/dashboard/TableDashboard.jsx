@@ -96,7 +96,7 @@ const TableDashboard = () => {
                       <Button
                         colorScheme="red"
                         size="sm"
-                        onClick={() => setSelectedDataId(item.id)}
+                        onClick={() => setSelectedDataId({ id: item.id, title: item.title })}
                       >
                         Delete
                       </Button>
