@@ -1,7 +1,7 @@
-import { LoginArea } from '../components/login/LoginArea';
+import { LoginCard } from '../components/login/LoginCard';
 
 const Login = () => {
-  return <LoginArea />;
+  return <LoginCard />;
 };
 
 export { Login };

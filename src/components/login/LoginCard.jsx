@@ -3,7 +3,7 @@ import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { LoginHeader } from './LoginHeader';
 import { LoginForm } from './LoginForm';
 
-const LoginArea = () => {
+const LoginCard = () => {
   return (
     <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
       <Box
@@ -15,7 +15,7 @@ const LoginArea = () => {
         textAlign="center"
         boxShadow="lg"
       >
-        <ThemeSelector />
+        <DarkLightMode />
         <Box p={4}>
           <LoginHeader />
           <LoginForm />
@@ -25,7 +25,7 @@ const LoginArea = () => {
   );
 };
 
-const ThemeSelector = () => {
+const DarkLightMode = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -39,4 +39,4 @@ const ThemeSelector = () => {
   );
 };
 
-export { LoginArea };
+export { LoginCard };
