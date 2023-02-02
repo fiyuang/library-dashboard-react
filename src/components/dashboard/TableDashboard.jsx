@@ -2,7 +2,18 @@ import React from 'react';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Button, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Stack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Stack
+} from '@chakra-ui/react';
 import { supabase } from '../../utils/supabase';
 import { DeleteModal } from './DeleteModal';
 import { Loading } from './Loading';
@@ -93,13 +104,17 @@ const TableDashboard = () => {
                           Edit
                         </Button>
                       </Link>
-                      <Button
-                        colorScheme="red"
-                        size="sm"
+                      <Box
+                        as="button"
+                        borderRadius="md"
+                        bg="red"
+                        color="white"
+                        px={3}
+                        h={8}
                         onClick={() => setSelectedDataId({ id: item.id, title: item.title })}
                       >
                         Delete
-                      </Button>
+                      </Box>
                     </Stack>
                   </Td>
                 </Tr>

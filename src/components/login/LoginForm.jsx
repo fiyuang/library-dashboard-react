@@ -32,11 +32,11 @@ const LoginForm = () => {
         password
       });
 
-      if(data.session) {
+      if (data.session) {
+        // localStorage.setItem('user', JSON.stringify(data.session));
         navigate('/');
       }
       setError(JSON.stringify(error.message));
-
     } catch (error) {
       setError(error.message);
       throw error;
