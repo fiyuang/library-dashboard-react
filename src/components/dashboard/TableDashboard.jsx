@@ -14,18 +14,22 @@ import {
   TableContainer,
   Stack
 } from '@chakra-ui/react';
-import { supabase } from '../../utils/supabase';
 import { Loading } from './Loading';
 import useSupabase from '../../utils/hooks/useSupabase';
-import { getAllBooks } from '../../services/SupabaseService';
+import { getAllBooks, deleteBook } from '../../services/SupabaseService';
 import { DeleteModal } from './DeleteModal';
 
 const TableDashboard = () => {
-  const [books, setBooks] = useState([]);
   const [selectedDataId, setSelectedDataId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const { loading, data, error } = useSupabase(getAllBooks);
+  const { loading, data } = useSupabase(getAllBooks);
+  const [tableData, setTableData] = useState([]);
+  useEffect(() => {
+    if (!loading && data) {
+      setTableData(data);
+    }
+  }, [loading, data]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -33,7 +37,7 @@ const TableDashboard = () => {
 
   async function handleDelete(dataId) {
     try {
-      const { deleteData } = await supabase.from('books').delete().eq('id', dataId);
+      const { deleteData } = await deleteBook(dataId);
       closeModal();
       Swal.fire({
         title: 'Success!',
@@ -42,12 +46,9 @@ const TableDashboard = () => {
         confirmButtonText: 'OK'
       }).then(() => {
         // Update the table data
-        supabase
-          .from('books')
-          .select()
-          .then((updatedBooksData) => {
-            setBooks(updatedBooksData.data);
-          });
+        getAllBooks().then(({ data: newData }) => {
+          setTableData(newData);
+        });
       });
     } catch (error) {
       Swal.fire({
@@ -73,7 +74,7 @@ const TableDashboard = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data?.map((item, index) => (
+              {tableData?.map((item, index) => (
                 <Tr key={index}>
                   <Td>{item.title}</Td>
                   <Td>{item.author}</Td>
