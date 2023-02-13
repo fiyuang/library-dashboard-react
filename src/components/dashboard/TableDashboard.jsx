@@ -14,35 +14,22 @@ import {
   TableContainer,
   Stack
 } from '@chakra-ui/react';
-import { supabase } from '../../utils/supabase';
-import { DeleteModal } from './DeleteModal';
 import { Loading } from './Loading';
+import useSupabase from '../../utils/hooks/useSupabase';
+import { getAllBooks, deleteBook } from '../../services/SupabaseService';
+import { DeleteModal } from './DeleteModal';
 
 const TableDashboard = () => {
-  const [books, setBooks] = useState([]);
   const [selectedDataId, setSelectedDataId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
 
+  const { loading, data } = useSupabase(getAllBooks);
+  const [tableData, setTableData] = useState([]);
   useEffect(() => {
-    const fetchBooksData = async () => {
-      try {
-        const result = await supabase.from('books').select();
-        setBooks(result.data);
-        setIsLoading(false);
-      } catch (error) {
-        setLoading(false);
-        Swal.fire({
-          title: 'Error!',
-          text: error.message,
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-      }
-    };
-
-    fetchBooksData();
-  }, []);
+    if (!loading && data) {
+      setTableData(data);
+    }
+  }, [loading, data]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -50,7 +37,7 @@ const TableDashboard = () => {
 
   async function handleDelete(dataId) {
     try {
-      const { deleteData } = await supabase.from('books').delete().eq('id', dataId);
+      const { deleteData } = await deleteBook(dataId);
       closeModal();
       Swal.fire({
         title: 'Success!',
@@ -59,12 +46,9 @@ const TableDashboard = () => {
         confirmButtonText: 'OK'
       }).then(() => {
         // Update the table data
-        supabase
-          .from('books')
-          .select()
-          .then((updatedBooksData) => {
-            setBooks(updatedBooksData.data);
-          });
+        getAllBooks().then(({ data: newData }) => {
+          setTableData(newData);
+        });
       });
     } catch (error) {
       Swal.fire({
@@ -78,8 +62,8 @@ const TableDashboard = () => {
 
   return (
     <>
-      {isLoading && <Loading />}
-      {!isLoading && (
+      {loading && <Loading />}
+      {!loading && (
         <TableContainer mt={10}>
           <Table variant="simple">
             <Thead>
@@ -90,7 +74,7 @@ const TableDashboard = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {books?.map((item, index) => (
+              {tableData?.map((item, index) => (
                 <Tr key={index}>
                   <Td>{item.title}</Td>
                   <Td>{item.author}</Td>
