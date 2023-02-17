@@ -19,12 +19,11 @@ import useSupabase from '../../utils/hooks/useSupabase';
 import { getAllBooks, deleteBook } from '../../services/SupabaseService';
 import { DeleteModal } from './DeleteModal';
 
-const TableDashboard = () => {
+const TableDashboard = ({ tableData, setTableData }) => {
   const [selectedDataId, setSelectedDataId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(true);
 
   const { loading, data } = useSupabase(getAllBooks);
-  const [tableData, setTableData] = useState([]);
   useEffect(() => {
     if (!loading && data) {
       setTableData(data);
@@ -80,14 +79,19 @@ const TableDashboard = () => {
                   <Td>{item.author}</Td>
                   <Td>
                     <Stack spacing={2} direction="row" align="center">
-                      <Button colorScheme="blue" size="sm">
-                        Detail
-                      </Button>
-                      <Link to={`/edit/${item.id}`}>
-                        <Button colorScheme="orange" size="sm">
+                      <Box as="a" href={`/edit/${item.id}`} textDecoration="none">
+                        <Box
+                          as="button"
+                          borderRadius="md"
+                          bg="orange"
+                          color="white"
+                          size="sm"
+                          px={3}
+                          h={8}
+                        >
                           Edit
-                        </Button>
-                      </Link>
+                        </Box>
+                      </Box>
                       <Box
                         as="button"
                         borderRadius="md"

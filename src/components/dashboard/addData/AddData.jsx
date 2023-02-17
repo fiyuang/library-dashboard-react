@@ -17,8 +17,9 @@ import {
 } from '@chakra-ui/react';
 import Swal from 'sweetalert2';
 import { supabase } from '../../../utils/supabase';
+import { getAllBooks } from '../../../services/SupabaseService';
 
-const AddData = () => {
+const AddData = ({ setTableData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const initialRef = React.useRef(null);
@@ -47,13 +48,9 @@ const AddData = () => {
         icon: 'success',
         confirmButtonText: 'OK'
       }).then(() => {
-        // Update the table data
-        // supabase
-        //   .from('books')
-        //   .select()
-        //   .then((updatedBooksData) => {
-        //     setBooks(updatedBooksData.data);
-        //   });
+        getAllBooks().then(({ data: newData }) => {
+          setTableData(newData);
+        })
       });
 
       setIsLoading(false);
@@ -123,7 +120,6 @@ const AddData = () => {
                 />
               </FormControl>
             </ModalBody>
-
             <ModalFooter>
               <Button type="submit" colorScheme="blue" mr={3}>
                 {isLoading ? <Spinner mr={2} size="sm" /> : 'Save'}
