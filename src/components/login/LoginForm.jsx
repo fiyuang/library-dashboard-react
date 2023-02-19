@@ -35,8 +35,9 @@ const LoginForm = () => {
       if (data.session) {
         // localStorage.setItem('user', JSON.stringify(data.session));
         navigate('/');
+      } else {
+        setError(JSON.stringify(error.message));
       }
-      setError(JSON.stringify(error.message));
     } catch (error) {
       setError(error.message);
       throw error;
