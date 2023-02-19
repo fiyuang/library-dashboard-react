@@ -3,7 +3,7 @@ import { ChevronRightIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router-dom';
 
 const BreadcrumbComponent = () => {
-  const { bookId } = useParams()
+  const { bookId } = useParams();
 
   return (
     <>
@@ -12,8 +12,12 @@ const BreadcrumbComponent = () => {
           <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
         </BreadcrumbItem>
 
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">Edit Page</BreadcrumbLink>
+        </BreadcrumbItem>
+
         <BreadcrumbItem isCurrentPage>
-          <BreadcrumbLink href="#">Edit Page {bookId} </BreadcrumbLink>
+          <BreadcrumbLink href="#">{bookId}</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
     </>
