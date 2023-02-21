@@ -1,43 +1,69 @@
 import { React, useState, useEffect } from 'react';
-import { supabase } from '../../utils/supabase';
 
 import { Formik, Form, Field } from 'formik';
 import { Box, Button, FormControl, FormLabel, Input, Stack, Textarea } from '@chakra-ui/react';
+import { getBook, updateBook } from '../../services/SupabaseService';
+import { Loading } from '../dashboard/Loading';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const FormEdit = (bookId) => {
-  const [detailBook, setDetailBook] = useState([]);
+  const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState({
     title: '',
     author: '',
     quantity: '',
-    description: '',
+    description: ''
   });
+  const [bookLoaded, setBookLoaded] = useState(false);
 
   useEffect(() => {
-    const fetchDetailBookData = async () => {
-      const result = await supabase.from('books').select().eq('id', bookId.params);
-      setDetailBook(result.data);
-    };
-
-    fetchDetailBookData();
-  }, [bookId]);
-
-  useEffect(() => {
-    if (detailBook.length) {
-      setInitialValues({
-        title: detailBook[0].title,
-        author: detailBook[0].author,
-        quantity: detailBook[0].quantity,
-        description: detailBook[0].description,
-      });
+    async function fetchBookData() {
+      const { data, error } = await getBook(bookId.params);
+      if (error) {
+        console.error(error);
+      } else if (data.length) {
+        setInitialValues({
+          title: data[0].title,
+          author: data[0].author,
+          quantity: data[0].quantity,
+          description: data[0].description
+        });
+        setBookLoaded(true);
+      }
     }
-  }, [detailBook]);
+
+    fetchBookData();
+  }, []);
 
   const onSubmit = async (values) => {
-    // Your submit logic goes here
+    const updatedBook = {
+      title: values.title,
+      author: values.author,
+      quantity: values.quantity,
+      description: values.description
+    };
+    const { error } = await updateBook(bookId.params, updatedBook);
+    if (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: error,
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    } else {
+      Swal.fire({
+        title: 'Success!',
+        text: 'Data deleted successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        navigate('/'); // redirect to dashboard page
+      });
+    }
   };
 
-  return (
+  return bookLoaded ? (
     <Box p={9}>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {({ isSubmitting }) => (
@@ -46,7 +72,7 @@ const FormEdit = (bookId) => {
               {({ field }) => (
                 <FormControl my={5}>
                   <FormLabel>Title</FormLabel>
-                  <Input type="text"  {...field} value="aaa" />
+                  <Input type="text" {...field} />
                 </FormControl>
               )}
             </Field>
@@ -87,8 +113,9 @@ const FormEdit = (bookId) => {
         )}
       </Formik>
     </Box>
+  ) : (
+    <Loading />
   );
 };
-
 
 export { FormEdit };
