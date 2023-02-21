@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 const useSupabase = (supaCall) => {
   const [loading, setLoading] = useState(false);
